@@ -191,7 +191,7 @@ Frontend runs on: `http://localhost:5173`
 ### Using the App
 
 1. **View Today's Menu**: Navigate to the home page (`/`)
-2. **Edit Menu**: Click "Edit Today's Menu" or go to `/edit/:date`
+2. **Edit Menu**: Click "Edit Today's Menu"
     - Search for flavors in the right panel
     - Click "Add" to add flavors to the menu
     - Click "Remove" to remove flavors from the menu

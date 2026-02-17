@@ -198,3 +198,12 @@ Frontend runs on: `http://localhost:5173`
     - Sort by popularity to see most/least used flavors
     - Toggle descriptions on/off for better readability
     - Click "Save Menu" when done
+
+### Demo
+
+
+
+https://github.com/user-attachments/assets/09c5b554-117f-42c2-af59-e6e6abb5f080
+
+
+

@@ -17,8 +17,7 @@ A local ice cream shop with thousands of flavor recipes needs to update their we
 
 ### ✅ Implemented
 
--   View today's menu (read-only display)
--   Edit today's menu with real-time preview
+-   View and edit today's menu
 -   Reusable flavor library
 -   Search/filter flavors by name
 -   Track in-stock vs out-of-stock flavors
@@ -28,6 +27,7 @@ A local ice cream shop with thousands of flavor recipes needs to update their we
     -   Least popular
 -   Toggle flavor descriptions on/off
 -   Historical menu tracking (2 weeks of seed data)
+-   Pre-fill yesterday's menu when today's menu is blank
 -   Responsive, centered layout
 -   Transaction-safe database updates
 

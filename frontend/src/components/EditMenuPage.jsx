@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { getFlavors, getMenu, putMenu } from "../api";
 import WorkingMenu from "./WorkingMenu";
@@ -95,118 +95,152 @@ function EditMenuPage() {
                 f.description?.toLowerCase().includes(search.toLowerCase()))
     );
 
-    function areMenusEqual(menuA, menuB) {
-        if (menuA.length !== menuB.length) return false;
-        const idsA = menuA.map((f) => f.id).sort();
-        const idsB = menuB.map((f) => f.id).sort();
-        return idsA.every((id, i) => id === idsB[i]);
-    }
-    const hasChanges = !areMenusEqual(workingMenu, originalMenu);
+    const hasChanges = useMemo(() => {
+        function areMenusEqual(menuA, menuB) {
+            if (menuA.length !== menuB.length) return false;
+            const idsA = menuA.map((f) => f.id).sort();
+            const idsB = menuB.map((f) => f.id).sort();
+            return idsA.every((id, i) => id === idsB[i]);
+        }
+        return !areMenusEqual(workingMenu, originalMenu);
+    }, [workingMenu, originalMenu]);
 
     return (
         <div
             style={{
-                display: "flex",
-                gap: "2rem",
                 padding: "2rem",
                 position: "relative",
             }}
         >
-            <button
-                style={{ position: "absolute", top: 16, left: 16 }}
-                onClick={() => navigate("/")}
+            <div
+                style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "2rem",
+                }}
             >
-                Back to Menu (Cancel)
-            </button>
-            <div style={{ flex: 1, minWidth: 0 }}>
-                <h2>Working Menu</h2>
-                {autoPopulated && (
-                    <div style={{ color: "#888", marginBottom: 8 }}>
-                        <i>Auto-populated with yesterday's flavor list</i>
+                <h1 style={{ margin: 0 }}>Editing Today's Menu ({today})</h1>
+            </div>
+            <main style={{ display: "flex", gap: "2rem" }}>
+                <div style={{ flex: "0 0 auto", minWidth: 0 }}>
+                    <h2>Working Menu</h2>
+                    {autoPopulated && (
+                        <div style={{ color: "#888", marginBottom: 8 }}>
+                            <i>Auto-populated with yesterday's flavor list</i>
+                        </div>
+                    )}
+                    <div
+                        style={{
+                            width: "250px",
+                            maxHeight: "calc(100vh - 250px)",
+                            overflowY: "auto",
+                            marginBottom: 16,
+                            border: "1px solid #eee",
+                            borderRadius: 8,
+                            background: "#fafafa",
+                            padding: 8,
+                        }}
+                    >
+                        <WorkingMenu
+                            flavors={workingMenu}
+                            onRemove={handleRemoveFlavor}
+                        />
                     </div>
-                )}
-                <div
-                    style={{
-                        width: "250px",
-                        maxHeight: "calc(100vh - 250px)",
-                        overflowY: "auto",
-                        marginBottom: 16,
-                        border: "1px solid #eee",
-                        borderRadius: 8,
-                        background: "#fafafa",
-                        padding: 8,
-                    }}
-                >
-                    <WorkingMenu
-                        flavors={workingMenu}
-                        onRemove={handleRemoveFlavor}
-                    />
+                    <button
+                        onClick={handleClearAll}
+                        disabled={workingMenu.length === 0}
+                    >
+                        Clear All Flavors
+                    </button>
                 </div>
-                <button
-                    onClick={handleClearAll}
-                    disabled={workingMenu.length === 0}
-                >
-                    Clear All Flavors
-                </button>
-            </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-                <h2>Flavor Library</h2>
-                <input
-                    type="text"
-                    placeholder="Search flavors..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    style={{
-                        width: "100%",
-                        marginBottom: 8,
-                        height: "25px",
-                        paddingLeft: "10px",
-                    }}
-                />
-                <button onClick={() => setShowInStockOnly((v) => !v)}>
-                    {showInStockOnly ? "Show All" : "Show In-Stock Only"}
-                </button>
-                <button
-                    style={{ marginLeft: 8 }}
-                    onClick={() => setShowDescriptions((v) => !v)}
-                >
-                    {showDescriptions
-                        ? "Hide Descriptions"
-                        : "Show Descriptions"}
-                </button>
-                <select
-                    value={sort}
-                    onChange={(e) => setSort(e.target.value)}
-                    style={{ marginLeft: 8, height: 32 }}
-                >
-                    <option value="popularity">Most Popular</option>
-                    <option value="name">A-Z</option>
-                    <option value="least_popular">Least Popular</option>
-                </select>
                 <div
+                    style={{ flex: "1 1 auto", minWidth: 0, maxWidth: "550px" }}
+                >
+                    <h2>Flavor Library</h2>
+                    <input
+                        type="text"
+                        placeholder="Search flavors..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        style={{
+                            width: "100%",
+                            marginBottom: 8,
+                            height: "25px",
+                            paddingLeft: "10px",
+                        }}
+                    />
+                    <button onClick={() => setShowInStockOnly((v) => !v)}>
+                        {showInStockOnly ? "Show All" : "Show In-Stock Only"}
+                    </button>
+                    <button
+                        style={{ marginLeft: 8 }}
+                        onClick={() => setShowDescriptions((v) => !v)}
+                    >
+                        {showDescriptions
+                            ? "Hide Descriptions"
+                            : "Show Descriptions"}
+                    </button>
+                    <select
+                        value={sort}
+                        onChange={(e) => setSort(e.target.value)}
+                        style={{
+                            marginLeft: 8,
+                            borderRadius: "8px",
+                            border: "1px solid transparent",
+                            padding: "0.6em 1.2em",
+                            fontSize: "1em",
+                            fontWeight: 500,
+                            fontFamily: "inherit",
+                            cursor: "pointer",
+                        }}
+                    >
+                        <option value="popularity">Most Popular</option>
+                        <option value="name">A-Z</option>
+                        <option value="least_popular">Least Popular</option>
+                    </select>
+                    <div
+                        style={{
+                            maxHeight: "calc(100vh - 350px)",
+                            overflowY: "auto",
+                            marginTop: 8,
+                            border: "1px solid #eee",
+                            borderRadius: 8,
+                            background: "#fafafa",
+                            padding: 8,
+                        }}
+                    >
+                        <FlavorLibrary
+                            flavors={filteredFlavors}
+                            isLoading={isLoadingFlavors}
+                            workingMenu={workingMenu}
+                            onAdd={handleAddFlavor}
+                            onRemove={handleRemoveFlavor}
+                            showDescriptions={showDescriptions}
+                        />
+                    </div>
+                </div>
+            </main>
+            <div
+                style={{
+                    position: "fixed",
+                    bottom: 24,
+                    right: 24,
+                    display: "flex",
+                    gap: "1rem",
+                }}
+            >
+                <button onClick={() => navigate("/")}>
+                    {hasChanges ? "Cancel" : "Back"}
+                </button>
+                <button
+                    onClick={handleSave}
+                    disabled={saving || !hasChanges}
                     style={{
-                        width: "325px",
-                        maxHeight: "calc(100vh - 250px)",
-                        overflowY: "auto",
-                        marginTop: 8,
-                        border: "1px solid #eee",
-                        borderRadius: 8,
-                        background: "#fafafa",
-                        padding: 8,
+                        backgroundColor:
+                            saving || !hasChanges ? undefined : "#646cff",
+                        color: saving || !hasChanges ? undefined : "white",
                     }}
                 >
-                    <FlavorLibrary
-                        flavors={filteredFlavors}
-                        isLoading={isLoadingFlavors}
-                        workingMenu={workingMenu}
-                        onAdd={handleAddFlavor}
-                        onRemove={handleRemoveFlavor}
-                        showDescriptions={showDescriptions}
-                    />
-                </div>
-            </div>
-            <div style={{ position: "fixed", bottom: 24, right: 24 }}>
-                <button onClick={handleSave} disabled={saving || !hasChanges}>
                     {saving ? "Saving..." : "Save Menu"}
                 </button>
                 {error && <div style={{ color: "red" }}>{error}</div>}

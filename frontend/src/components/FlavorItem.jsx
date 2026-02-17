@@ -1,6 +1,13 @@
 function FlavorItem({ flavor, inMenu, onAdd, onRemove }) {
     return (
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div
+            style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                paddingLeft: "8px",
+            }}
+        >
             <span style={{ flex: 1 }}>
                 {flavor.name}
                 {flavor.in_stock === 0 && (

@@ -193,10 +193,11 @@ Frontend runs on: `http://localhost:5173`
 1. **View Today's Menu**: Navigate to the home page (`/`)
 2. **Edit Menu**: Click "Edit Today's Menu" or go to `/edit/:date`
     - Search for flavors in the right panel
-    - Click "+" to add flavors to the menu
-    - Click "×" to remove flavors from the menu
+    - Click "Add" to add flavors to the menu
+    - Click "Remove" to remove flavors from the menu
     - Sort by popularity to see most/least used flavors
     - Toggle descriptions on/off for better readability
+    - Toggle visibility of out-of-stock items
     - Click "Save Menu" when done
 
 ### Demo

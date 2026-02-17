@@ -23,7 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
-.github
+.github/
 
 # Local files
 *.local

@@ -5,6 +5,8 @@ import WorkingMenu from "./WorkingMenu";
 import FlavorLibrary from "./FlavorLibrary";
 
 function EditMenuPage() {
+    const navigate = useNavigate();
+
     const [allFlavors, setAllFlavors] = useState([]);
     const [workingMenu, setWorkingMenu] = useState([]);
     const [originalMenu, setOriginalMenu] = useState([]);
@@ -17,11 +19,11 @@ function EditMenuPage() {
     const [autoPopulated, setAutoPopulated] = useState(false);
     const [sort, setSort] = useState("popularity");
     const [showDescriptions, setShowDescriptions] = useState(true);
+
     const today = new Date().toISOString().split("T")[0];
     const yesterday = new Date(Date.now() - 86400000)
         .toISOString()
         .split("T")[0];
-    const navigate = useNavigate();
 
     // Load all flavors and today's menu
     useEffect(() => {
@@ -54,27 +56,25 @@ function EditMenuPage() {
             }
         }
         fetchData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sort, today, yesterday]);
 
-    // Add flavor to working menu
     function handleAddFlavor(flavor) {
         if (!workingMenu.find((f) => f.id === flavor.id)) {
             setWorkingMenu([...workingMenu, flavor]);
             setAutoPopulated(false);
         }
     }
-    // Remove flavor from working menu
+
     function handleRemoveFlavor(flavorId) {
         setWorkingMenu(workingMenu.filter((f) => f.id !== flavorId));
         setAutoPopulated(false);
     }
-    // Clear all
+
     function handleClearAll() {
         setWorkingMenu([]);
         setAutoPopulated(false);
     }
-    // Save menu
+
     async function handleSave() {
         setSaving(true);
         setError(null);
@@ -87,7 +87,7 @@ function EditMenuPage() {
             setSaving(false);
         }
     }
-    // Filtered flavor library
+
     const filteredFlavors = allFlavors.filter(
         (f) =>
             (!showInStockOnly || f.in_stock) &&

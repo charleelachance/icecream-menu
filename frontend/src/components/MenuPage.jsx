@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getFlavors, getMenu } from "../api";
+import { getMenu } from "../api";
 import { useNavigate } from "react-router-dom";
 
 function MenuPage() {
